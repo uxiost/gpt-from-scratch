@@ -2,7 +2,7 @@
 GPT implementation following Karpathy's lesson https://www.youtube.com/watch?v=kCc8FmEb1nY
 
 # Setup
-You only need a GPU and pytorch. Easiest way is to [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/uxiost/gpt-from-scratch/notebooks/gpt_main.ipynb)
+You only need a GPU and pytorch. Easiest way is to [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/uxiost/gpt-from-scratch/blob/main/notebooks/gpt_main.ipynb) Remember to Runtime -> Change runtime type -> GPU
 
 Locally you can:  
 - Clone repo
