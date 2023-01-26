@@ -175,31 +175,35 @@ class GPTLanguageModel(nn.Module):
             idx = torch.cat((idx, idx_next), dim=1)  # B, T+1
         return idx
 
-model = GPTLanguageModel()
-m = model.to(device)  # move model parameters to gpu
+if __name__ == '__main__':
 
-# create optimizer
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+    model = GPTLanguageModel()
+    m = model.to(device)  # move model parameters to gpu
 
-# training loop
-for iter in range(max_iters):
+    # create optimizer
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
-    # evaluate every eval_interval iterations
-    if iter % eval_interval == 0:
-        losses = estimate_loss()
-        print(
-            f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+    # training loop
+    for iter in range(max_iters):
 
-    xb, yb = get_batch('train')  # sample a batch
-    logits, loss = m(xb, yb)  # calculate loss
-    optimizer.zero_grad(set_to_none=True)  # reset gradients
-    loss.backward()  # calculate gradients wrt loss
-    optimizer.step()  # update weights
+        # evaluate every eval_interval iterations
+        if iter % eval_interval == 0:
+            losses = estimate_loss()
+            print(
+                f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
-# generate using model
-# init context with first token (\n)
-idx = torch.zeros((1, 1), dtype=torch.long, device=device)
-output = decode(m.generate(idx, 10000)[0].tolist())
-with open('output.txt', 'w') as f:
-    f.write(output)
-print(output[:1000])
+        xb, yb = get_batch('train')  # sample a batch
+        logits, loss = m(xb, yb)  # calculate loss
+        optimizer.zero_grad(set_to_none=True)  # reset gradients
+        loss.backward()  # calculate gradients wrt loss
+        optimizer.step()  # update weights
+
+    # generate using model
+    idx = torch.zeros((1, 1), dtype=torch.long, device=device) # init context with first token (\n)
+    output = decode(m.generate(idx, 10000)[0].tolist())
+    with open('output.txt', 'w') as f:
+        f.write(output)
+    print(output[:1000])
+
+    print(f'Saving model at step {iter}')
+    torch.save(m, f'/models/model_{iter}.ckpt')
