@@ -73,7 +73,7 @@ class Head(nn.Module):
     def forward(self, x):
         B,T,C = x.shape
         k = self.key(x) # B, T, head_size
-        q = self.key(x) # B, T, head_size
+        q = self.query(x) # B, T, head_size
         # compute affinities
         wei = q @ k.transpose(-2,-1) * self.head_size ** -0.5
         wei = wei.masked_fill(self.tril[:T,:T]==0, float('-inf'))  # tril[:T,:T] is used for compatibility with generate method
